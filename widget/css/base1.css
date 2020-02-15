@@ -1,0 +1,45 @@
+
+.aaui-group-sc{
+    
+    right: 10px;
+    top: 5px;
+    background: linear-gradient(to bottom,#fff 0,#fff 100%);
+    padding: 1px 10px;
+    border-radius: 20px;
+    color: #feb609;
+    box-shadow: 3px 4px 10px #17161617;
+}
+
+
+
+
+.game-list-wrap-zhubo{
+  padding: 10px;
+  height:100%;
+
+/*  background:#ebf0f3;  */
+}
+.game-list-wrap-zhubo ul{
+  width: 100%;
+}
+.game-list-wrap-zhubo ul li{
+  width: 31%;
+  margin-right: 3%;
+  text-align: center;
+  float: left;
+  margin-bottom: 15px;
+
+}
+.game-list-wrap-zhubo ul li:nth-child(3n){   /*每行2个元素*/
+  margin-right: 0;
+}
+.game-list-wrap-zhubo ul li .game-a{
+  display: inline-block;
+  width: 100%;
+  background: #fff;
+
+}
+.game-list-wrap-zhubo ul li .game-a img{
+  width: 100%;
+
+}

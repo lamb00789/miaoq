@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>视频</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/swiper.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/auislide.css" />
+    <style>
+    html,body{
+      background-color: #14121b;
+      height: 100%;
+    }
+    #videoinfo{margin-top:10rem}
+    .aui-grid img{ height:1.4rem; display:inline }
+    .aui-grid [class*=aui-col-]{padding:0.5rem 0}
+    .aui-grid .aui-grid-label{margin-top:0}
+    </style>
+</head>
+<body>
+
+    <section id="playercontainer" class="aui-content" >
+        <div class="aui-card-list aui-margin-b-0">
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name" id="title"></div>
+                <div class="aui-card-list-user-info">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-9 aui-font-size-14">
+                            <marquee  class="aui-text-danger" id="ggg">111</marquee>
+                        </div>
+						<div  class="aui-col-xs-3 aui-text-right" onclick="openshou()" tapmode>
+                             <i class="aui-iconfont aui-font-size-18 aui-icon-favorfill"></i>收藏
+                         </div>
+                        <!-- <div v-if="it.favor" class="aui-col-xs-3 aui-text-right aui-text-info" @click="addfavor(it.id)" tapmode> -->
+                            <!-- <i class="aui-iconfont aui-font-size-18 aui-icon-favorfill"></i>已收藏 -->
+                        <!-- </div> -->
+                        <!-- <div v-else class="aui-col-xs-3 aui-text-right" @click="addfavor(it.id)" tapmode> -->
+                            <!-- <i class="aui-iconfont aui-font-size-18 aui-icon-favorfill"></i>收藏 -->
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id='info'>
+      <h1 id='title'>视频标题</h1>
+    </div>
+
+</body>
+
+	 <script type="text/x-dot-template" id="template">
+		{{~ it : value : index }}
+				 <div class="aui-slide-node bg-dark" tapmode onclick="openApp('{{= value. link }}')">
+					<img src="{{= value. picname }}" />
+				</div>
+		{{~}}
+	</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.js" ></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script src="../script/cyberplayer.js"></script>
+<script src="../script/video.min.js"></script>
+<script src="../script/videojs-contrib-hls.min.js"></script>
+<script src="../script/videojs-contrib-quality-levels.min.js"></script>
+	<script type="text/javascript" src="../script/auislide.js"></script>
+
+<script type="text/javascript">
+ var api_url = localStorage.getItem('api_url');
+apiready = function(){
+//get();
+//lunbo()
+ var title = $api.byId('title');
+ title.innerHTML = api.pageParam.title;
+
+  var ggg = $api.byId('ggg');
+ ggg.innerHTML = localStorage.getItem('bg')
+ 	record_play_history();
+  var player = cyberplayer("playercontainer").setup({
+      width: api.winWidth,
+      //height: api.winHeight,
+      file: api.pageParam.url, // <—rtmp or flv直播地址
+      fallbackfile: api.pageParam.url, // <— 备用播放地址，为了手机上能进行直播，设置hls直播流
+      autostart: true,
+      stretching: "uniform",
+      volume: 100,
+      controls: true,
+      ak: "dfd6c7951d4c477bb2555496c8e97166" // 公有云平台注册即可获得accessKey
+  });
+
+
+  player.play();
+
+  player.on('fullscreen', function (ret) {
+       //alert( JSON.stringify( ret ) );
+       if (ret.fullscreen) {
+         api.setScreenOrientation({
+             orientation: 'landscape_right'
+         });
+       }else {
+         api.setScreenOrientation({
+             orientation: 'portrait_up'
+         });
+       }
+  });
+
+  api.addEventListener({
+      name: 'keyback'
+  }, function(ret, err) {
+    api.setScreenOrientation({
+        orientation: 'portrait_up'
+    });
+    api.closeWin();
+  });
+
+
+  //获取信息
+      api.parseTapmode();
+}
+
+function get(){
+	   var tuijian = $api.byId('tuijian');
+	   var tuijian1 = $api.byId('tuijian1');
+			api.ajax({
+				  url: api_url+'/App/Index/faxian.html',
+				  method: 'get',
+			  },function(ret, err){
+					limit=10;
+				  if (ret) {
+					//alert(JSON.stringify(ret))
+					var pagefn = doT.template(tuijian1.text);
+					tuijian.innerHTML = pagefn(ret);
+
+				  }
+			  });
+			}
+
+
+      			function lunbo(){
+      	   var bannerid = $api.byId('slidebox');
+      		var template = $api.byId('template');
+      			api.ajax({
+      				  url: api_url+'/App/App/lunbo.html',
+      				  method: 'get',
+      			  },function(ret, err){
+      				  if (ret) {
+      					//alert(JSON.stringify(ret.slun))
+      					var pagefn = doT.template(template.text);
+      					bannerid.innerHTML = pagefn(ret.blun);
+
+      					banNer();
+      				  }
+      			  });
+      			}
+
+
+
+
+      		function record_play_history(){
+      	  //alert(api.pageParam.title);
+      	  api.ajax({
+      	      url: api_url+'/App/Index/jilu.html',
+      		  method: 'get',
+      	      data:{
+      	      	values:{
+      	      		uid: localStorage.getItem('user_id'),
+      	      		title: api.pageParam.title,
+      	      		url: api.pageParam.url,
+      				img: api.pageParam.img,
+
+      	      	}
+      	      }
+            },function(ret,err){
+            });
+      	}
+
+
+
+      	function openshou(){
+      			api.ajax({
+      				  url: api_url+'/App/Index/shou.html',
+      				  method: 'get',
+      				  data:{
+      					values:{
+      						uid: localStorage.getItem('user_id'),
+      						title: api.pageParam.title,
+      						url: api.pageParam.url,
+      						img: api.pageParam.img,
+      						type:'2',
+      					}
+      				  }
+      			  },function(ret,err){
+      				  if (ret) {
+      					 if(ret.code == 0 ){
+      						api.toast({
+      							msg: ret.msg,
+      							duration: 1000
+      						});
+      					 }else if(ret.code == 1){
+      						 api.toast({
+      							msg: ret.msg,
+      							duration: 1000
+      						});
+      					 }
+      				}
+      		  });
+      	}
+
+
+
+
+
+
+
+
+
+      	 function openApp(url){
+      				if(api.systemType == 'android'){
+      					api.openApp({
+      						androidPkg: 'android.intent.action.VIEW',
+      						mimeType: 'text/html',
+      						uri: url
+      					}, function(ret, err) {});
+      				}else{
+      					api.openApp({
+      						iosUrl: url
+      				   });
+      				}
+      			}
+      </script>
+      </html>

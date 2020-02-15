@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/swiper.css" />
+    <style>
+        .type-item {
+            display: inline;
+            white-space: nowrap;
+        }
+
+        .type-item li {
+            display: inline-block;
+            color: black;
+            font-weight: normal;
+            margin-left: 5px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border-radius: 15px;
+        }
+
+        .active {
+            color: orange !important;
+            font-weight: bold !important;
+            background-color: #f0f0f0;
+
+        }
+
+        .list-warp {
+            width: 100%;
+            display: inline-block;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 5px;
+            padding-bottom: 3px;
+            box-shadow: black 10px;
+            color: black;
+            font-size: 16px;
+            line-height: 2em;
+            overflow-x: scroll;
+        }
+
+        .hideable {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!--分类信息-->
+    <section style="margin: 5px;">
+        <div class="list-warp">
+            <ul id="type-list" class="type-item">
+            </ul>
+        </div>
+    </section>
+    <section style="margin: 5px;" class="hideable">
+        <div class="list-warp">
+            <ul id="type-child-list" class="type-item">
+            </ul>
+        </div>
+    </section>
+    <section style="margin: 5px;" class="hideable">
+        <div class="list-warp">
+            <ul id="type-class-list" class="type-item">
+            </ul>
+        </div>
+    </section>
+    <section style="margin: 5px;" class="hideable">
+        <div class="list-warp">
+            <ul id="type-area-list" class="type-item">
+            </ul>
+        </div>
+    </section>
+    <section style="margin: 5px;" class="hideable">
+        <div class="list-warp">
+            <ul id="type-year-list" class="type-item">
+            </ul>
+        </div>
+    </section>
+    <section style="margin: 5px;" class="hideable">
+        <div class="list-warp">
+            <ul id="type-lang-list" class="type-item">
+            </ul>
+        </div>
+    </section>
+    <section style="margin: 5px;" class="hideable">
+        <div class="list-warp">
+            <ul id="type-letter-list" class="type-item">
+            </ul>
+        </div>
+    </section>
+
+
+    <section class="aui-content aui-margin-5" id="channeldetails">
+        <div class="aui-row-padded">
+            <input type="hidden" value="1" id="nextrow" />
+            <ul id="videolist">
+                <li v-for="v in it"
+                    @click="openPlayer(v.vod_play_url,v.vod_name,v.vod_play_from,v.vod_score,v.vod_content,v.vod_id)">
+                    <!--<img :alt="v.vod_name" :src="v.vod_pic">-->
+
+          					<div :style="'background-image: url('+v.vod_pic+')'"></div>
+                    <i>{{v.vod_name}}</i>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+</body>
+
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../script/echo.js"></script>
+<script type="text/javascript">
+    var api_url = localStorage.getItem('api_url');
+    var cms_url = localStorage.getItem('cms_url');
+    //window.type = 1;
+    window.types = {};
+    window.children = [];
+    window.flitter = {};
+    apiready = function () {
+        getTypes()
+    };
+    function toggleFlitter() {
+        $(".hideable").toggle();
+        if(!$(".hideable").is(":hidden")){
+            $("html,body").animate({ scrollTop: 0, screenLeft: 0, }, 400);
+        }
+
+    }
+    function getTypes() {
+        api.showProgress({
+            title: '加载中...',
+            text: '请稍等...',
+            modal: false
+        });
+        ////////
+        api.ajax({
+            url: cms_url + '/api.php/provide/vod/?ac=list',
+            method: 'get',
+        }, function (ret, err) {
+            api.hideProgress();
+            var data = ret;
+            $('#type-list').empty();
+            var _types = data['class']
+            for (var type of _types) {
+                if (type['parent'] == 0) {
+                    window.types[type['type_id']] = {
+                        type_id: type['type_id'],
+                        type_name: type['type_name'],
+                        class: type['type_extend']['class'].split(','),
+                        years: type['type_extend']['year'].split(','),
+                        area: type['type_extend']['area'].split(','),
+                        lang: type['type_extend']['lang'].split(','),
+                        children: []
+                    };
+                    if (api.pageParam.name == type['type_name']) {
+                        $('#type-list').append('<li t-id="' + type['type_id'] + '" class="list-item active">' + type['type_name'] + '</li>');
+                        window.flitter['t'] = type['type_id']
+
+                    } else {
+                        $('#type-list').append('<li t-id="' + type['type_id'] + '" class="list-item">' + type['type_name'] + '</li>');
+                    }
+                } else {
+                    window.children.push({
+                        type_id: type['type_id'],
+                        type_name: type['type_name'],
+                        parent: type['parent']
+                    })
+
+                }
+            }
+            for (var child_class of children) {
+                try {
+                    window.types[child_class.parent].children.push(child_class);
+                } catch (e) {
+
+                }
+            }
+
+            loadfitter(window.flitter['t'])
+
+            $('.list-item').click(function () {
+                $(this).siblings('li').removeClass('active');
+                $(this).addClass('active');
+                window.flitter['t'] = $(this).attr('t-id');
+                loadfitter($(this).attr('t-id'));
+                reload()
+            });
+
+            rebo()
+        });
+
+        ////////
+        /*
+        $.ajax({
+            url: cms_url + '/api.php/provide/vod/?ac=list',
+            type: 'get',
+            success: function (res) {
+                window.api.toast({
+                    msg: '服务器已响应',
+                    duration: 2000
+                });
+                var data = JSON.parse(res);
+                $('#type-list').empty();
+                var types = data['class']
+                for (var type of types) {
+                    if (type['parent'] == 0) {
+                        window.types[type['type_id']] = {
+                            type_id: type['type_id'],
+                            type_name: type['type_name'],
+                            class: type['type_extend']['class'].split(','),
+                            years: type['type_extend']['year'].split(','),
+                            area: type['type_extend']['area'].split(','),
+                            lang: type['type_extend']['lang'].split(','),
+                            children: []
+                        };
+                        if (api.pageParam.name == type['type_name']) {
+                            $('#type-list').append('<li t-id="' + type['type_id'] + '" class="list-item active">' + type['type_name'] + '</li>');
+                            window.type = type['type_id']
+                        } else {
+                            $('#type-list').append('<li t-id="' + type['type_id'] + '" class="list-item">' + type['type_name'] + '</li>');
+                        }
+                    } else {
+                        window.children.push({
+                            type_id: type['type_id'],
+                            type_name: type['type_name'],
+                            parent: type['parent']
+                        })
+
+                    }
+                }
+                for (var child_class of children) {
+                    try {
+                        window.types[child_class.parent].children.push(child_class);
+                    } catch (e) {
+
+                    }
+                }
+                window.api.toast({
+                    msg: '分类信息已解析',
+                    duration: 2000
+                });
+                loadfitter(window.type)
+
+                $('.list-item').click(function () {
+                    $(this).siblings('li').removeClass('active');
+                    $(this).addClass('active');
+                    window.type = $(this).attr('t-id');
+                    loadfitter(window.type);
+                    reload()
+                });
+
+                rebo()
+
+            }
+        });
+        */
+    }
+    function reload() {
+
+        window.clear();
+        window.add();
+    }
+    function gettypes(id) {
+        var _types = '';
+        _types = id;
+        if (typeof (window.types[id]) != 'undefined') {
+            for (var type of window.types[id].children) {
+                _types += ',' + type.type_id
+            }
+        }
+
+        return _types;
+
+    }
+    function regListener() {
+        $('.list-child-item').click(function () {
+            $(this).siblings('li').removeClass('active');
+            $(this).addClass('active');
+
+            if ($(this).attr('h-data') == '-1') {
+                window.flitter['t'] = window.type;
+            } else {
+                window.flitter['t'] = $(this).attr('h-data')
+            }
+            reload()
+        });
+        $('.list-class-item').click(function () {
+            $(this).siblings('li').removeClass('active');
+            $(this).addClass('active');
+            if ($(this).attr('h-data') == '') {
+                window.flitter['class'] = '';
+            } else {
+                window.flitter['class'] = $(this).attr('h-data')
+            }
+            reload()
+        });
+        $('.list-area-item').click(function () {
+            $(this).siblings('li').removeClass('active');
+            $(this).addClass('active');
+            if ($(this).attr('h-data') == '') {
+                window.flitter['area'] = '';
+            } else {
+                window.flitter['area'] = $(this).attr('h-data')
+            }
+            reload()
+        });
+        $('.list-year-item').click(function () {
+            $(this).siblings('li').removeClass('active');
+            $(this).addClass('active');
+            if ($(this).attr('h-data') == '') {
+                window.flitter['year'] = '';
+            } else {
+                window.flitter['year'] = $(this).attr('h-data')
+            }
+            reload()
+        });
+        $('.list-lang-item').click(function () {
+            $(this).siblings('li').removeClass('active');
+            $(this).addClass('active');
+            if ($(this).attr('h-data') == '') {
+                window.flitter['lang'] = '';
+            } else {
+                window.flitter['lang'] = $(this).attr('h-data')
+            }
+            reload()
+        });
+        $('.list-letter-item').click(function () {
+            $(this).siblings('li').removeClass('active');
+            $(this).addClass('active');
+            if ($(this).attr('h-data') == '') {
+                window.flitter['letter'] = '';
+            } else {
+                window.flitter['letter'] = $(this).attr('h-data')
+            }
+            reload()
+        });
+
+    }
+    function loadfitter(id) {
+        //加载子分类
+        var _children = types[id].children;
+        $('#type-child-list').empty();
+        $('#type-child-list').append('<li h-data="-1" class="list-child-item active">全部</li>');
+        for (var _child of _children) {
+            $('#type-child-list').append('<li h-data="' + _child['type_id'] + '" class="list-child-item">' + _child['type_name'] + '</li>');
+
+        }
+
+        $('#type-class-list').empty();
+        $('#type-class-list').append('<li h-data="" class="list-class-item active">全部</li>');
+        for (var _child of types[id].class) {
+            $('#type-class-list').append('<li h-data="' + _child + '" class="list-class-item">' + _child + '</li>');
+        }
+
+        $('#type-area-list').empty();
+        $('#type-area-list').append('<li h-data="" class="list-area-item active">全部</li>');
+        for (var _child of types[id].area) {
+            $('#type-area-list').append('<li h-data="' + _child + '" class="list-area-item">' + _child + '</li>');
+        }
+
+        $('#type-year-list').empty();
+        $('#type-year-list').append('<li h-data="" class="list-year-item active">全部</li>');
+        for (var _child of types[id].years) {
+            $('#type-year-list').append('<li h-data="' + _child + '" class="list-year-item">' + _child + '</li>');
+        }
+
+        $('#type-lang-list').empty();
+        $('#type-lang-list').append('<li h-data="" class="list-lang-item active">全部</li>');
+        for (var _child of types[id].lang) {
+            $('#type-lang-list').append('<li h-data="' + _child + '" class="list-lang-item">' + _child + '</li>');
+        }
+
+        $('#type-letter-list').empty();
+        $('#type-letter-list').append('<li h-data="" class="list-letter-item active">全部</li>');
+        for (var _child of 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0-9'.split(',')) {
+            $('#type-letter-list').append('<li h-data="' + _child + '" class="list-letter-item">' + _child + '</li>');
+        }
+
+        regListener()
+    }
+    function rebo() {
+        var channeldetails = new Vue({
+            el: '#channeldetails',
+            data: {
+                it: [],
+                offset: 0,
+                loader: '正在加载更多...'
+            },
+            mounted: function () {
+
+                window.add = this.add;
+                window.clear = this.clear;
+
+                this.add();
+                loadMore(function () {
+                    channeldetails.add()
+                });
+
+            },
+            updated: function () {
+                echo.init({
+                    offset: 500, throttle: 0
+                });
+            },
+            methods: {
+                add: function () {
+                    var nextrow = $("#nextrow").val();
+                    console.log(JSON.stringify({
+                        t: gettypes(window.flitter['t']),
+                        pg: nextrow,
+                        class: window.flitter['class'],
+                        area: window.flitter['area'],
+                        year: window.flitter['year'],
+                        lang: window.flitter['lang'],
+                        letter: window.flitter['letter']
+                    }));
+                    api.ajax({
+                        url: cms_url + '/api.php/provide/vod/?ac=detail',
+                        method: 'get',
+                        data: {
+                            values: {
+                                t: gettypes(window.flitter['t']),
+                                pg: nextrow,
+                                class: window.flitter['class'],
+                                area: window.flitter['area'],
+                                year: window.flitter['year'],
+                                lang: window.flitter['lang'],
+                                letter: window.flitter['letter']
+                            }
+                        }
+                    }, function (ret, err) {
+                        if (ret) {
+                            //console.log(JSON.stringify(ret))
+                            if (ret.code == 1) {
+
+                                if (ret.list.length == 0) {
+
+                                    window.api.toast({
+                                        msg: '木有视频了',
+                                        duration: 2000
+                                    });
+                                }
+
+                                channeldetails.offset += nextrow;
+                                channeldetails.it = channeldetails.it.concat(ret.list);
+                                $("#nextrow").val(parseInt(nextrow) + 1);
+                            } else if (ret.code == 0) {
+                                window.api.toast({
+                                    msg: ret.msg,
+                                    duration: 2000
+                                });
+                            }
+
+                        }
+                    });
+                },
+                clear: function () {
+                    this.it = [];
+                    $("#nextrow").val(1)
+                },
+                /*
+                clear: function () {
+                    this.it = [];
+                    $("#nextrow").val(0)
+                },
+                add: function () {
+                    var nextrow = $("#nextrow").val();
+                    api.ajax({
+                        url: cms_url + '/api.php/provide/vod/?ac=detail',
+                        method: 'get',
+                        data: {
+                            values: Object.assign({
+                                t: window.type,
+                                pg: nextrow,
+                            }, window.flitter)
+                        }
+                    }, function (ret, err) {
+                        if (ret) {
+                            //console.log(JSON.stringify(ret))
+                            if (ret.code == 1) {
+                                if (ret.list.length == 0) {
+                                    api.toast({
+                                        msg: '木有视频了',
+                                        duration: 2000
+                                    });
+                                }
+                                channeldetails.offset += nextrow;
+                                channeldetails.it = channeldetails.it.concat(ret.list);
+                                $("#nextrow").val(parseInt(nextrow) + 1);
+                            } else if (ret.code == 0) {
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 2000
+                                });
+                            }
+
+                        }
+                    });
+                }
+                */
+
+            }
+
+        });
+    }
+
+</script>
+
+</html>

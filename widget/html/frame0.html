@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<title>title</title>
+	<link rel="stylesheet" type="text/css" href="../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../css/swiper.css" />
+	<link rel="stylesheet" type="text/css" href="../css/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/base.css" />
+	<link rel="stylesheet" type="text/css" href="../css/auislide.css" />
+	<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../css/style.css" />
+	<link rel="stylesheet" href="..//iconfont/iconfont.css">
+	<style>
+		#notice_active {
+			float: left;
+			width: 80%;
+			height: 1.5rem;
+			padding: 0;
+			overflow: hidden;
+			position: relative;
+			font-size: 14px;
+			color: black;
+		}
+
+		.notice_active_ch {
+			list-style-type: none;
+			line-height: 1.5rem;
+			overflow: hidden;
+
+		}
+
+	</style>
+</head>
+
+<body style="background-color: #f1f1f1;height:auto;">
+	<section id="swiper" class="swiper-container" style="background-color: #ffffff;">
+		<div id="aui-slide" class="aui-slide-wrap">
+			<div id="slidebox" class="aui-slide-wrap"></div>
+			<div class="aui-slide-page-wrap"></div>
+		</div>
+	</section>
+
+	<section id="notice" class="aui-content aui-bg-index aui-margin-b-10"
+		style="background-color: #ffffff;height:auto;box-shadow: 0.15rem 0.15rem 0.15rem rgba(0, 0, 0, 0.05);">
+		<div class="gonggao" id="gonggao">
+			<div class="list-title-l">
+				<i class="aui-iconfont aui-icon-notificationfill aui-text-index aui-margin-r-10 aui-font-size-20"></i>
+			</div>
+			<div class="gonggao-r" id="notice_active">
+				<ul id="gong">
+					<li class="notice_active_ch">
+						<span id="gonggao" class="aui-font-size-12 aui-text-index"
+							style="color: #fff;font-size: 0.65rem;margin-left: 5px;">全网会员视频任性看</span>
+
+					</li>
+					<li class="notice_active_ch">
+						<span id="gonggao" class="aui-font-size-12 aui-text-index"
+							style="color: #fff;font-size: 0.65rem;margin-left:5px;">全网会员视频任性看</span>
+
+					</li>
+					<li class="notice_active_ch">
+						<span id="gonggao" class="aui-font-size-12 aui-text-index"
+							style="color: #fff;font-size: 0.65rem;margin-left:5px;">全网会员视频任性看</span>
+
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<section class="aui-content aui-margin-5" id="channellist"
+		style="background-color: #ffffff;box-shadow: rgba(0, 0, 0, 0.05);">
+		<div class="main">
+			<div class="title">
+
+				<span style="color:#2b2b2b;"><span class="iconfont icon-vip-fill" style="color: red;font-size: 1em;"></span>全网VIP解析</span>
+			</div>
+			<ul class="liebiao">
+				<li @click="jx('https://www.iqiyi.com/')">
+					<img src="../image/media/iqiyi.png">
+					<i>爱奇艺</i>
+				</li>
+				<li @click="jx('https://v.qq.com/')">
+					<img src="../image/media/tengxun.png">
+					<i>腾讯视频</i>
+				</li>
+				<li @click="jx('https://www.youku.com/')">
+					<img src="../image/media/youku.png">
+					<i>优酷视频</i>
+				</li>
+				<li @click="jx('https://tv.sohu.com/')">
+					<img src="../image/media/souhu.png">
+					<i>搜狐视频</i>
+				</li>
+				<li @click="jx('https://www.mgtv.com/')">
+					<img src="../image/media/mangguo.png">
+					<i>芒果TV</i>
+				</li>
+				<li @click="jx('http://www.pptv.com/')">
+					<img src="../image/media/PPTV.png">
+					<i>PPTV</i>
+				</li>
+				<li @click="jx('http://static.hd.baofeng.com/')">
+					<img src="../image/media/baofeng.png">
+					<i>暴风影音</i>
+				</li>
+				<li @click="jx('https://www.1905.com/mdb/film/')">
+					<img src="../image/media/M1905.png">
+					<i>M1905</i>
+				</li>
+				<li @click="jx('http://www.le.com/')">
+					<img src="../image/media/leshi.png">
+					<i>乐视视频</i>
+				</li>
+				<li @click="jx('http://www.fun.tv/')">
+					<img src="../image/media/fx.png">
+					<i>风行视频</i>
+				</li>
+				<li @click="jx('http://movie.miguvideo.com/')">
+					<img src="../image/media/z.png">
+					<i>咪咕影院</i>
+				</li>
+				<li @click="jx('https://www.bilibili.com/')">
+					<img src="../image/media/l.png">
+					<i>BiliBili</i>
+				</li>
+			</ul>
+		</div>
+		<div style="height:20px;"></div>
+	</section>
+	<section>
+		<img id='videos' style="width: 100%;" src="../image/v-nav.png" />
+	</section>
+
+	<!--
+	<section class="aui-content aui-margin-5" id="channellist">
+		<div class="main">
+			<div class="title">
+				<span style="color:#2b2b2b;">分类浏览</span>
+			      <span @click="openWin('all_win', {title:'更多'})" style="color:#626262;font-size: 0.65rem;">更多 >></span>
+			</div>
+			<ul class="liebiao">
+              <li v-for="v in list" @click="openWin('list_win', {title:v.title})">
+					<img :alt="v.title" :src="v.picname">
+					<i>{{ v.title }}</i>
+              </li>
+				<li v-for="v in list" @click="openWin('list_win', {id:v.type_id})">
+					<img :alt="v.type_name" src="../image/movie.png">
+					<i>{{ v.type_name }}</i>
+				</li>
+			</ul>
+		</div>
+		<div style="height:20px;"></div>
+	</section>
+-->
+	<section class="aui-content aui-margin-5" id="channeldetails" style="background-color: #ffffff;height:auto;">
+		<div>
+			<div class="title">
+				<span ><span class="iconfont icon-hot-fill" style="color: red;font-size: 1em;"></span>最新视频</span >
+				<!-- <span>更多></span> -->
+			</div>
+			<ul>
+				<!--      v.vod_play_url,v.vod_name,v.vod_play_from -->
+				<li v-for="v in list"
+					@click="openPlayer(v.vod_play_url,v.vod_name,v.vod_play_from,v.vod_score,v.vod_content,v.vod_id)">
+					<!--<img :alt="v.vod_name" :src="v.vod_pic">-->
+					<div :style="'background-image: url('+v.vod_pic+')'"></div>
+					<i>{{v.vod_name}}</i>
+				</li>
+			</ul>
+		</div>
+	</section>
+</body>
+
+
+
+<script type="text/x-dot-template" id="template">
+		{{~ it : value : index }}
+				 <div class="aui-slide-node bg-dark" tapmode onclick="openApp('{{= value. link }}')">
+					<img src="{{= value. picname }}" />
+				</div>
+		{{~}}
+	</script>
+<script type="text/x-dot-template" id="notice1">
+		{{~ it : value : index }}
+				<li class="notice_active_ch" >
+                  <span class="aui-font-size-12 aui-text-index" style="font-size: 0.65rem;margin-left: 5px;">{{= value. neirong }}</span>
+				</li>
+		{{~}}
+	</script>
+<script type="text/javascript" src="../script/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+
+	function timer(opj) {
+		$(opj).find('ul').animate({
+			marginTop: "0rem"
+		}, 500, function () {
+			$(this).css({ marginTop: "0rem" }).find("li:first").appendTo(this);
+		})
+	}
+	$(function () {
+		var num = $('#notice_active').find('li').length;
+		if (num > 1) {
+			var time = setInterval('timer("#notice_active")', 5000);
+			$('.gg_more a').mousemove(function () {
+				clearInterval(time);
+			}).mouseout(function () {
+				time = setInterval('timer("#notice_active")', 5000);
+			});
+		}
+
+		$(".news_ck").click(function () {
+			location.href = $("#notice_active .notice_active_ch").children(":input").val();
+		})
+	});
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.js"></script>
+<script type="text/javascript" src="../script/auislide.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/jquery.mobile-1.3.2.min.js"></script>
+<script type="text/javascript">
+
+
+	var api_url = localStorage.getItem('api_url');
+	var cms_url = localStorage.getItem('cms_url');
+	apiready = function () {
+		$('#videos').click(function (e) {
+			var x = e.pageX;
+			var loc = x / $(document).width();
+			if (loc < 0.25) {
+				api.openWin({
+					name: 'videos',
+					url: './list_win.html',
+					pageParam: {
+						name: '电影'
+					}
+				})
+			}
+			if (loc >= 0.25 && loc < 0.5) {
+				api.openWin({
+					name: 'videos',
+					url: './list_win.html',
+					pageParam: {
+						name: '连续剧'
+					}
+				})
+			}
+			if (loc >= 0.5 && loc < 0.75) {
+				api.openWin({
+					name: 'videos',
+					url: './list_win.html',
+					pageParam: {
+						name: '综艺'
+					}
+				})
+			}
+			if (loc >= 0.75 && loc < 1) {
+				api.openWin({
+					name: 'videos',
+					url: './list_win.html',
+					pageParam: {
+						name: '动漫'
+					}
+				})
+			}
+
+		});
+
+		api.ajax({
+			url: api_url + '/App/Index/tanchuang',
+			method: 'get',
+		}, function (ret, err) {
+			if (ret) {
+				//渲染模板
+				// alert( JSON.stringify(ret.msg['title']) );
+				if (ret.msg['kai'] == 1) {
+					var tcurl = ret.msg['url'];
+					api.confirm({
+						title: ret.msg['title'],
+						msg: ret.msg['nei'],
+						buttons: ['去看看', '知道了']
+					}, function (ret, err) {
+						if (ret.buttonIndex == 1) {
+							if (api.systemType == "android") {
+								toBanner(tcurl);
+							}
+							if (api.systemType == "ios") {
+								toBanner(tcurl);
+							}
+						}
+					});
+				}
+
+
+			}
+
+		});
+
+		lunbo();
+		pindao();
+		rebo();
+		notice();
+		api.parseTapmode();
+		api.setCustomRefreshHeaderInfo({
+			bgColor: '#fff',
+		}, function () {
+			//下拉刷新被触发，自动进入加载状态，使用 api.refreshHeaderLoadDone() 手动结束加载中状态
+			lunbo();
+			notice();
+			setTimeout(function () {
+				api.refreshHeaderLoadDone()
+			}, 2000);
+		});
+	};
+	//轮播开始//
+	function lunbo() {
+		var bannerid = $api.byId('slidebox');
+		var template = $api.byId('template');
+		api.ajax({
+			url: api_url + '/App/Index/lunbo.html',
+			method: 'get',
+		}, function (ret, err) {
+			if (ret) {
+				//alert(JSON.stringify(ret.slun))
+				var pagefn = doT.template(template.text);
+				bannerid.innerHTML = pagefn(ret.slun);
+				banNer();
+			}
+		});
+	}
+	//轮播结束//
+	//公告//
+	//频道//
+
+	function pindao() {
+		var channellist = new Vue({
+			el: '#channellist',
+			mounted: function () {
+				/*
+				api.ajax({
+					url: cms_url + '/api.php/provide/vod/?ac=list',
+					method: 'get',
+				}, function (ret, err) {
+					if (ret) {
+						//console.log(JSON.stringify(ret))
+						channellist.list = ret['class'];
+					}
+				});
+				*/
+			}
+		});
+	}
+	//热播视频//
+	function rebo() {
+
+		var channeldetails = new Vue({
+			el: '#channeldetails',
+			data: { list: [] },
+			mounted: function () {
+				api.ajax({
+					url: cms_url + '/api.php/provide/vod/?ac=detail&h=72',
+					method: 'get',
+				}, function (ret, err) {
+					if (ret) {
+						//console.log(JSON.stringify(ret))
+						channeldetails.list = ret['list'];
+					}
+				});
+			}
+		});
+	}
+	//公告//
+	function notice() {
+		var gong = $api.byId('gong');
+		var notice1 = $api.byId('notice1');
+		api.ajax({
+			url: api_url + '/App/Index/notice.html',
+			method: 'get',
+		}, function (ret, err) {
+			if (ret) {
+				//alert(JSON.stringify(ret))
+				var pagefn = doT.template(notice1.text);
+				gong.innerHTML = pagefn(ret);
+
+			}
+		});
+	}
+
+</script>
+
+</html>

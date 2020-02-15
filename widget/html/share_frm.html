@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+      <title>分享赚钱</title>
+      <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+
+	  <link rel="stylesheet" type="text/css" href="../css/myui.css" />
+      <style>
+      #swiper{margin-top:1.5rem}
+      #swiper .swiper-slide{width:60%;position:relative;}
+      #swiper .swiper-slide .qr{position:absolute;width:40%;left:30%;bottom:5%;}
+      </style>
+      <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+  <body style="background-color:#fff">
+
+  <div >
+    <img src="../image/share_bg.jpg" alt="" width="100%" id="box">
+	<p style="text-align:center;">
+	邀请码功能	<img style="width:200px;height:200px;margin:20px auto;" src="http://pan.5cmc.com/uploads/QQ截图20200210175349.png"/>
+	<!--下面有二维码api 自行修改吧懒得倒腾了-->
+	</p>
+	<p style="text-align:center;color:#000;">
+    邀请码：<b style="color:#F01878;" id='share_code'></b>
+	</p>
+	<p style="text-align:center;color:#000;">
+    长按识别图中二维码
+	</p>
+  </div>
+
+
+      <section class="aui-content-padded aui-margin-b-10">
+          <div class="aui-card-list aui-border-t1">
+              <div class="aui-card-list-header" style="color:#252525;">
+                  规则积分说明
+              </div>
+              <div class="aui-card-list-content-padded" id="shareinfo">
+			  <p>1、注册送体验，签到送积分，好礼换不停</p>
+			  <p>2、分享链接或海报，好友使用你的链接完成注册，即可获取积分！</p>
+			  <p>3、三级分销，积分赚不停！</p>
+			  <p>4、积分免费兑换会员，您不觉不行动嘛！</p>
+        <p>5、截屏保存分享好友或朋友圈！</p>
+			  </div>
+          </div>
+      </section>
+  </body>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/doT.js"></script>
+  <script type="text/javascript" src="../script/common.js"></script>
+  <script type="text/javascript">
+   var api_url = localStorage.getItem('api_url');
+	  apiready = function(){
+			var hongbaoid = $api.byId('box');
+				 api.ajax({
+						url: api_url+'/App/Index/config.html',
+						method: 'get'
+					},function(ret, err){
+						if (ret) {
+						var url = ret.xiazai;
+						 localStorage.setItem('xiazai',ret.xiazai);
+						var img = ' <div style="height:13%;width:100%;"></div>	<div style="text-align:center;"><img style="width:150px;height:150px;margin:0 auto;" src="http://qr.topscan.com/api.php?&text='+url+'"/></div><div style="height:4%;width:100%;"></div><p style="text-align:center;color:#000;">邀请码：<b style="color:#F01878;font-size:18px;">'+localStorage.getItem('share')+'</b></p><p style="text-align:center;color:#000;">长按识别图中二维码</p>';
+						// var img = $api.byId('bpic');
+							 //hongbaoid.src = "http://qr.topscan.com/api.php?&text="+url;
+
+							//alert(url);
+						//hongbaoid.innerHTML = img;
+            $('#share_code').html(localStorage.getItem('user_id'));
+
+						}
+				  });
+	  };
+
+
+  </script>
+  </html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+      <link rel="stylesheet" type="text/css" href="../css/swiper.css"/>
+  </head>
+  <body style="background-color: #323232;">
+      
+
+      <section class="aui-content aui-margin-5" id="channellist">
+        <div class="main">
+            <ul class="liebiao">
+              <li v-for="(item,index) in list" :key="index" @click="openWin('list_win', {title:item.title})">
+                <img :src="item.picname" alt="">
+                <i>{{item.title}}</i>
+              </li>
+            </ul>
+        </div>
+      </section>
+      </body>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/vue.js"></script>
+  <script type="text/javascript">
+   var api_url = localStorage.getItem('api_url');
+      apiready = function(){
+          api.parseTapmode();
+          //pullRefresh();
+          //频道
+          var channellist = new Vue({
+              el: '#channellist',
+              data: {list: []}, 
+              mounted: function(){
+                  api.ajax({
+						  url: api_url+'/App/Index/pindao1.html',
+						  method: 'get',
+					  },function(ret, err){
+						  if (ret) {
+							//alert(JSON.stringify(ret))
+							 channellist.list = ret;
+						  }      
+					  });
+              }
+          });
+      };
+	  function openWin(name,params){
+	  if (typeof(params) == 'boolean') {
+        isTabBar = isLogin;
+        isLogin = params;
+        params = {};
+    }
+		api.openWin({
+			  name: ''+name+'',
+			  url: './'+name+'.html',
+			   pageParam: params,
+			 
+		  });
+	}
+  </script>
+  </html>

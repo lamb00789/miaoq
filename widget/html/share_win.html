@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+      <title>分享赚钱window</title>
+      <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+  </head>
+  <body>
+    <header id="header" class="aui-bar aui-bar-nav" style="background-color:#252525;color:#fff;">
+        <a class="aui-pull-left aui-btn" onclick="api.closeWin()">
+            <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
+        </a>
+        <div class="aui-title" style="background-color:#252525;color:#fff;">邀请好友</div>
+    </header>
+    <footer id="footer" class="aui-bar aui-bar-tab">
+        <div class="aui-bar-tab-item aui-padded-10">
+            <div class="aui-btn aui-btn-danger aui-btn-block aui-btn-sm" style="background: linear-gradient(-125deg,#0295f9 0%, #2f49fd 100%);box-shadow: 0 8px 10px rgba(32,160,255,.3);" onclick="copySet()" tapmode>< 复 制 推 广 链 接 ></div>
+        </div>
+
+    </footer>
+  </body>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript" src="../script/doT.js"></script>
+  <script type="text/javascript">
+  apiready = function(){
+      api.parseTapmode();
+      var header = $api.byId('header');
+      $api.fixStatusBar(header);
+      var footer = $api.byId('footer');
+      //加载frame
+      var header_h = $api.offset(header).h;
+      var footer_h = $api.offset(footer).h;
+      api.openFrame({
+          name: 'share_frm',
+          url: './share_frm.html',
+          pageParam: api.pageParam,
+          bounces: false,
+          rect: {x:0, y:header_h, w:'auto', h:api.frameHeight-header_h-footer_h}
+      });
+  }
+  function erweima(){
+    var dialogBox = api.require('dialogBox');
+    dialogBox.webView({
+        tapClose: false,
+        path: 'http://qr.topscan.com/api.php?&text='+localStorage.getItem('xiazai'),
+        texts: {
+            title: '专属二维码',
+            leftBtnTitle: '关闭',
+            rightBtnTitle: '分享'
+        },
+        styles: {
+            bg: '#fff',
+            corner: 5,
+            w: 300,
+            h: 380,
+            title: {
+                h: 44,
+                size: 14,
+                color: '#000'
+            },
+            upDividingLine: {
+                width: 0.2,
+                color: '#696969'
+            },
+            webView: {
+                h: 300,
+                bg: '#fff',
+            },
+            downDividingLine: {
+                width: 0.2,
+                color: '#696969'
+            },
+            left: {
+                bg: 'rgba(0,0,0,0)',
+                color: '#007FFF',
+                size: 12
+            },
+            right: {
+                bg: 'rgba(0,0,0,0)',
+                color: '#007FFF',
+                size: 12
+            }
+        }
+    }, function(ret) {
+        if (ret.eventType == 'left') {
+            var dialogBox = api.require('dialogBox');
+            dialogBox.close({
+                dialogName: 'webView'
+            });
+        }else {
+
+          alert('请截屏后分享');
+        }
+    });
+  }
+
+
+  //////////复制分享链接 //////////
+  function copySet(){
+
+  var clipBoard = api.require('clipBoard');
+  clipBoard.set({
+    value: '全网VIP大片免费看！注册时记得绑定我的ID：'+ id +'  ，免费领会员！APP下载地址：'+ret.xiazai
+}, function(ret, err) {
+      if (ret) {
+        api.toast({
+            msg: '已复制到剪切板',
+            duration: 4000
+        });
+
+
+
+      } else {
+
+      }
+  });
+
+  }
+
+  </script>
+  </html>

@@ -1,0 +1,727 @@
+<!--移动设备H5播放器，2020年快乐！-->
+<html>
+
+<head>
+  <title>播放器</title>
+  <meta name="viewport"
+    content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+  <!-- <script charset="utf-8" type="text/javascript"
+        src="https://g.alicdn.com/de/prismplayer/2.8.2/aliplayer-h5-min.js"></script>
+
+    <script charset="utf-8" type="text/javascript" src="js/aliplayercomponents-1.0.5.min.js"></script>
+
+    <link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css" />
+    -->
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <style>
+    html,
+    body {
+      margin: 0;
+      background-color: rgb(29, 26, 43);
+      width: 100%;
+      height: 100%;
+      padding-bottom: 4em;
+    }
+
+    #video-info {
+      padding: 15px;
+      padding-top: 5px !important;
+      color: #ffffff;
+    }
+
+    .playlist_full .content_playlist,
+    .play_list_box .playlist_full .content_playlist {
+      height: auto;
+      padding: 1rem 0.25rem;
+      line-height: 140%;
+      width: 100%;
+    }
+
+    .content_playlist,
+    .playlist.tabs .title_nav,
+    .playlist_notfull ul {
+      padding: 0;
+      height: 1rem;
+      overflow: hidden;
+    }
+
+    .pannel_head,
+    .link_text,
+    .title_nav,
+    .content_playlist,
+    #play_page.zbo .content_playlist,
+    .down_list,
+    .art_relates,
+    .content_desc,
+    .wrapper_fl .scroller,
+    .vodlist_smt ul,
+    .wrapper_tm,
+    .art_list_row,
+    .page,
+    .comm_list_box,
+    .search_tips,
+    .zbo.vodlist,
+    .play_vlist_box,
+    .player_infotip,
+    .plot_stem .article_content,
+    .plot_stem .art_pren_list,
+    .plot_list_box {
+      padding: 0 0.375rem;
+    }
+
+    ul,
+    ol,
+    li,
+    dt,
+    dd {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: inline;
+      float: left;
+
+    }
+
+    .playlist_full .content_playlist li {
+      width: 32%;
+      padding: 0 0.125rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .content_playlist li.active a {
+      color: #ff5f00;
+      background: none;
+      border: 1px solid #ff5f00;
+    }
+
+    .content_playlist li a,
+    .listshow span {
+      display: block;
+      position: relative;
+      padding: 1rem 0.25rem;
+      border: 1px solid #f1f1f1;
+      text-align: center;
+      background: #f8f8f8;
+      border-radius: 4px;
+      line-height: 1rem;
+      height: 1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -o-text-overflow: ellipsis;
+      white-space: nowrap;
+      text-decoration: none;
+
+    }
+
+    #fullscreen {
+      color: #ffffff;
+      background-color: black;
+      opacity: 0.8;
+      border-radius: 10px;
+      text-align: center;
+      padding: 10px;
+      margin-top: 4px;
+    }
+
+    .new-jj {
+      list-style: none;
+      white-space: nowrap;
+      overflow-x: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .new-jj div {
+      height: 4em;
+      display: inline-block;
+      margin: 5px;
+      line-height: 4em;
+      width: 4em;
+      color: #ffffff;
+      border-color: #ffffff;
+      border-style: solid;
+      border-width: 2px;
+      text-align: center;
+      border-radius: 5px;
+    }
+
+    #ad {
+      width: 100%;
+      background-color: #f75000;
+      text-align: center;
+      height: 3em;
+      line-height: 3em;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    #btm-toolbar {
+      position: fixed;
+      width: 100%;
+      height: 3em;
+      background-color: #000000;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      color: #ffffff;
+      line-height: 3em;
+      display: flex;
+      align-items: center;
+    }
+
+    #addcom {
+      border-radius: 15px;
+      height: 3em;
+      outline: none;
+      border-style: none;
+      line-height: 3em;
+      margin-left: 5px;
+      background-color: #202020;
+      color: #ffffff;
+      padding-left: 10px;
+      width: auto;
+    }
+
+    .comment-item {
+      width: 100%;
+
+    }
+
+    .comment-item div {
+      margin: 15px
+    }
+
+    .comment-item div span {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .comment-item div p {
+      padding-top: 5px;
+      margin: 0;
+      word-break: break-all;
+      word-wrap: break-word;
+      white-space: normal;
+    }
+
+    #channeldetails .title {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem;
+    }
+
+    #channeldetails .title span:nth-child(1) {
+      font-size: 0.8rem;
+      color: #2b2b2b;
+    }
+
+    #channeldetails .title span:nth-child(2) {
+      font-size: 0.8rem;
+      color: #2b2b2b;
+    }
+
+    #channeldetails ul {
+      width: 99%;
+      display: flex;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+
+    #channeldetails ul li {
+      width: 32%;
+      display: flex;
+      flex-direction: column;
+      padding: 0.1rem 0.1rem;
+    }
+
+    #channeldetails ul li img {
+      width: 98%;
+      height: 10rem;
+      margin: 0 auto;
+      border-radius: 5px 5px 5px 5px;
+      box-shadow: 0.15rem 0.15rem 0.15rem rgba(0, 0, 0, 0.05);
+      margin-bottom: 0.4rem;
+    }
+
+    #channeldetails i {
+      display: inline-block;
+      width: 100%;
+      font-size: 1rem;
+      font-style: normal;
+      color: #ffffff;
+      white-space: nowrap;
+      /*不换行*/
+      text-overflow: ellipsis;
+      /*超出部分文字以...显示*/
+      overflow: hidden;
+    }
+
+    .aui-content {
+      -webkit-overflow-scrolling: touch;
+      overflow-x: hidden;
+      word-break: break-all;
+    }
+
+    .aui-margin-5 {
+      margin: 0.25rem !important;
+    }
+
+    .aui-row-padded {
+      margin-left: -0.125rem;
+      margin-right: -0.125rem;
+    }
+
+    .aui-row-padded [class*=aui-col-xs-] {
+      padding: 0.125rem;
+    }
+
+    #videolist .aui-card-list-header {
+      padding: 0.25rem
+    }
+
+    #videolist .aui-ellipsis-2 {
+      font-size: 0.7rem
+    }
+
+    #videolist img {
+      width: 50vw;
+      height: 50vw
+    }
+
+    #videolist .aui-ellipsis-2 {
+      line-height: 0.8rem
+    }
+  </style>
+</head>
+
+<body>
+  <!--Video Player start-->
+  <!--<div style="width: 100%;" class="prism-player" id="video-player"></div>-->
+  <div id='iframe-player'>
+    <!--
+        <iframe id='if-player' allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"
+            frameBorder=0 scrolling=no style="width: 100%;height: 256px;"
+            src="http://g.shumafen.cn/api/file/5fd49e05ae3aef1f/ac958f3be7943588.mp4"></iframe>
+          -->
+    <div style="width:100%;height:256px"></div>
+    <div id="fullscreen">全屏播放</div>
+  </div>
+
+
+  <!--Video Player end-->
+  <div class="" id="video-info">
+    <div style="display: inline-block;width: 100%;">
+      <span style="float: right;" id='jq-btn'>简介></span>
+      <span id="title" style="font-size: 140%;">视频标题</span>
+    </div>
+
+    <span id="sub-info" style="color: slategrey;"></span>
+    <div style="margin-top:5px">
+      <p style="font-size: 12px;color: azure;display: none;" id='jq-text' style="margin-left: 3px;"></p>
+    </div>
+    <!--
+    <div style="margin-top:5px">
+      <span id="jj-btn">选集</span>
+      <div class="playlist_full" style="margin-left: 3px;">
+        <ul class="content_playlist clearfix" id='jj' style="display: none;">
+            <li class="active conch-02"><a href="javascript:void(0)">第1集</a></li>
+        </ul>
+      </div>
+    </div>
+    -->
+    <div id='ad'>
+      广告模块存在重大bug已取消
+    </div>
+    <div style="margin-top:5px;width: 100%;">
+      <span style="float: right;" id='jq-btn'>选集></span>
+      <div>选集</div>
+      <div style="margin-top: 10px;" class="new-jj">
+      </div>
+    </div>
+  </div>
+  <section class="aui-content aui-margin-5" id="channeldetails">
+    <div class="aui-row-padded">
+      <div class="title">
+        <span style="font-weight: bold;font-size: large;color: #ffffff;">猜你喜欢</span>
+      </div>
+      <ul id="videolist">
+        <li v-for="v in it"
+          @click="openPlayer(v.vod_play_url,v.vod_name,v.vod_play_from,v.vod_score,v.vod_content,v.vod_id)">
+          <img :src="v.vod_pic">
+          <i>{{v.vod_name}}</i>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <div style="height: 5em;width: 100%;">
+
+  </div>
+
+
+
+  <!--底部toolbar-->
+  <div id="btm-toolbar">
+    <input id="addcom" type="text" placeholder="写评论" readonly>
+    <ul style="list-style-type: none;text-align:right;width: 100%;padding-right: 15px;white-space: nowrap;">
+      <li style="float:right;text-align: center;height: 3em;font-size: 12px;margin-left: 5px;z-index: 80;">
+        <div id="share"
+          style="width: 3em;height: 3em;display: inline-block;background-image: url(../image/share.png);background-position: center;background-size: contain;">
+        </div>
+      </li>
+      <li style="float:right;text-align: center;height: 3em;font-size: 12px;margin-left: 5px;">
+        <div id="favorite"
+          style="width: 3em;height: 3em;display: inline-block;background-image: url(../image/favorites.png);background-position: center;background-size: contain;">
+        </div>
+      </li>
+      <li style="float:right;text-align: center;height: 3em;font-size: 12px;margin-left: 5px;">
+        <div
+          style="width: 3em;height: 3em;display: inline-block;background-image: url(../image/download.png);background-position: center;background-size: contain;">
+        </div>
+      </li>
+      <li style="float:right;text-align: center;height: 3em;font-size: 12px;margin-left: 5px;">
+        <div id='comment'
+          style="width: 3em;height: 3em;display: inline-block;background-image: url(../image/comments.png);background-position: center;background-size: contain;">
+        </div>
+      </li>
+    </ul>
+  </div>
+  <!--通用底部弹窗-->
+  <div class="btm-dialog" id="btm-dialog"
+    style="background-color: #ffffff;border-top-left-radius: 10px;border-top-right-radius: 10px;height: 256px;width: 100%;position: fixed;bottom: -350px;z-index: 99;">
+  </div>
+  <!--模态背景-->
+  <div id='modal'
+    style="background-color: black;opacity: 0.9;position: fixed;top: 0;bottom: 0;left: 0;right: 0;z-index: 98;display: none;">
+  </div>
+
+  <!--发表评论代码-->
+  <div id="code_comment" style="display: none;">
+    <textarea id='comment-content'
+      style="margin-top: 15px;padding: 10px;width: 100%;height: 150px;outline: none;border-style: none;"
+      placeholder="留下评论吧~~~~"></textarea>
+    <button id="submit-comment"
+      style="height: 3em;background-color:dodgerblue;border-style: none;outline: none;border-radius: 5px;color: #ffffff;float: right;line-height: 3em;margin-right: 15px;">发布评论</button>
+  </div>
+  <script id="code_comment_list" style="display: none;" type="text/html">
+    <div style="width: 100%;overflow-y: scroll;height: 100%;">
+      <ul  id="comment-list">
+        <li class="comment-item">
+          <div>
+            <span>hempflower</span>
+            <p>这是一条测试评论</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </script>
+
+  <script>
+  var api_url = localStorage.getItem('api_url');
+  var cms_url = localStorage.getItem('cms_url');
+  var isdebug = localStorage.getItem('debug')
+  </script>
+  <script type="text/javascript" src="http://cms.uz7.cn/static/js/playerconfig.js"></script>
+  <script type="text/javascript" src="script/api.js"></script>
+  <script type="text/javascript" src="../script/vue.js"></script>
+  <script type="text/javascript" src="../script/common.js"></script>
+  </script>
+  <script>
+
+
+      //$.getScript(cms_url+'/static/js/playerconfig.js')
+    apiready = function () {
+      var clipBoard = api.require('clipBoard');
+      var isFullTimer;
+
+      if (isdebug == "true") {
+        var browser = api.require('UIWebBrowser');
+      } else {
+        //隐藏全屏按钮
+        $('#fullscreen').hide();
+        var browser = api.require('webBrowser');
+      }
+
+      //Code of Video Player
+      var video_info = {
+        id: api.pageParam.id,
+        url: api.pageParam.url,
+        title: api.pageParam.title,
+        from: api.pageParam.from,
+        score: api.pageParam.score,
+        jq: api.pageParam.jq
+      };
+      /*
+      browser = api.require('webBrowser');
+      browser.openView({
+          url: '#',
+          rect: {
+            h:256
+          }
+      });
+      browser.loadScript({
+        script: 'document.title="'+video_info.title+'"'
+      })
+      */
+
+
+      //initPlayer();
+      //document.getElementById("if-player").src = getVideoUrl(video_info.url, 'niuxyun')
+      init()
+      function init() {
+        listjj();
+        vd_data = parseUrl(video_info.url)
+        //alert(vd_data.length)
+        loadVideo(vd_data[0]['url']);;
+        $('#title').html(video_info.title);
+        var jj_info = parseUrl(video_info.url);
+        $('#sub-info').html(video_info.score + ' 分 · ' + jj_info.length + '集');
+        $('#jq-text').html(video_info.jq);
+        updateInfo()
+        guess()
+      }
+      function updateInfo() {
+        //加载点赞信息
+        $.ajax({
+          url: api_url + '/App/video/islike',
+          data: {
+            user_id: localStorage.getItem('user_name'),
+            vod_id: video_info.id,
+          },
+          success: function (res) {
+            var data = JSON.parse(res);
+            if (data.code == 1) {
+              $('#favorite').css('background-image', 'url(../image/favorites-fill.png)')
+            } else {
+              $('#favorite').css('background-image', 'url(../image/favorites.png)')
+            }
+          }
+        })
+      }
+      function listjj() {
+        var jj_info = parseUrl(video_info.url);
+        for (var j of jj_info) {
+          $('.new-jj').append('<div class="video-item" url="' + j.url + '">' + friendly_name(j.name) + '</div>')
+        }
+      }
+	  //由于有时字体超长如何转换下面是案例 具体怎么改看你自己
+      function friendly_name(name) {
+        if (name == '1080p') {
+          return '超清'
+        }
+        if (name == '720p') {
+          return '高清'
+        }
+        return name;
+      }
+      function parseUrl(url) {
+        var subVideos = url.split("#");
+        var videos = new Array();
+        for (var video of subVideos) {
+          if (video.indexOf('$') != -1) {
+            //alert(video.split('$')[1])
+            videos.push({
+              name: video.split('$')[0],
+              url: video.split('$')[1]
+            })
+          }
+        }
+        return videos;
+      }
+      function getVideoUrl(url, from) {
+        //不一定只有一个来源，所以...
+        var _from;
+        if(from.indexOf('$$$')!=-1){
+          var froms = from.split('$$$');
+          _from = froms[0];
+        }else{
+          _from = from;
+        }
+        return MacPlayerConfig.player_list[_from]['parse'] + url;
+      }
+      function loadVideo(url) {
+        //alert(getVideoUrl(url, video_info.from));
+        if (isdebug == "true") {
+          browser.close();
+          browser.open({
+            path: getVideoUrl(url, video_info.from),
+            rect: {
+              h: 256
+            },
+            fixed: true,
+          })
+        } else {
+          browser.openView({
+            url: getVideoUrl(url, video_info.from),
+            rect: {
+              h: 256
+            }
+          });
+        }
+
+      }
+
+      function openButtomDialog(html) {
+        $('#modal').fadeIn()
+        $('#btm-dialog').animate({ bottom: 0 });
+        $('#btm-dialog').html(html);
+      }
+      function closeButtomDialog() {
+        $('#btm-dialog').animate({ bottom: -350 })
+        $('#modal').fadeOut()
+        $('#btm-dialog').html('');
+      }
+      $('#modal').click(function () {
+        closeButtomDialog()
+      })
+      $('#addcom').click(function () {
+        openButtomDialog($('#code_comment').html());
+        $('#submit-comment').click(function () {
+          $.ajax({
+            url: api_url + '/App/video/subcomment',
+            type: 'POST',
+            data: {
+              user_id: localStorage.getItem('user_name'),
+              vod_id: video_info.id,
+              content: $('#comment-content').val()
+            },
+            complete: function () {
+              closeButtomDialog()
+            }
+          });
+        });
+      });
+      $('#comment').click(function () {
+        openButtomDialog($('#code_comment_list').html());
+        $('#comment-list').empty()
+        $.ajax({
+          url: api_url + '/App/video/comments',
+          type: 'get',
+          data: {
+            vod_id: video_info.id
+          },
+          success: function (res) {
+            var list = JSON.parse(res).list;
+            if (list.length == 0) {
+              $('#comment-list').html('')
+            } else {
+              for (var item of list) {
+                $('#comment-list').append('<li class="comment-item"><div><span>' + item.user_id + '</span><p>' + item.content + '</p></div></li>');
+              }
+            }
+          }
+        });
+
+      });
+      $('.video-item').click(function () {
+        loadVideo($(this).attr('url'))
+      })
+      $('#jq-btn').click(function () {
+        $("#jq-text").toggle();
+      });
+      $('#jj-btn').click(function () {
+        $("#jj").toggle();
+      });
+      $('#fullscreen').click(function () {
+        if(isdebug == 'false'){
+          return;
+        }
+        api.setScreenOrientation({
+          orientation: 'landscape_left'
+        });
+        api.setFullScreen({
+          fullScreen: true
+        });
+        localStorage.setItem('isFull', '1')
+        setTimeout(function () {
+          browser.setRect({ rect: { w: api.winWidth, h: api.winHeight } })
+        }, 500)
+        isFullTimer = setInterval(function () {
+          if (localStorage.getItem('isFull') != '1') {
+            browser.setRect({ rect: { w: api.winWidth, h: 256 } })
+          } else {
+            browser.setRect({ rect: { w: api.winWidth, h: api.winHeight } })
+          }
+        }, 500)
+      })
+
+      $('#favorite').click(function () {
+        if ($('#favorite').css('background-image').indexOf('fill') == -1) {
+          api.toast({
+            msg: '已喜欢',
+            duration: 2000
+          });
+          $('#favorite').css('background-image', 'url(../image/favorites-fill.png)')
+        } else {
+          api.toast({
+            msg: '已取消喜欢',
+            duration: 2000
+          });
+          $('#favorite').css('background-image', 'url(../image/favorites.png)')
+        }
+        $.ajax({
+          url: api_url + '/App/video/like',
+          type: 'post',
+          data: {
+            user_id: localStorage.getItem('user_name'),
+            vod_id: video_info.id,
+          },
+          success: function (res) {
+            updateInfo();
+          }
+        })
+      });
+//该处是分享的自己maccms网页版！！网页版 具体怎么搞 看APP提示
+      $('#share').click(function () {
+        clipBoard.set({
+          value: '我发现了一个有趣的视频，快来围观:' + cms_url + "voddetail/" + video_info.id
+        }, function (ret, err) {
+          if (ret) {
+            api.toast({
+              msg: '已复制到剪切板',
+              duration: 2000
+            });
+
+          } else {
+
+          }
+        });
+      })
+      function close(){
+        browser.close();
+      }
+      function guess() {
+        var channeldetails = new Vue({
+          el: '#channeldetails',
+          data: {
+            it: [],
+            offset: 0,
+            loader: '正在加载更多...'
+          },
+          mounted: function () {
+            this.add(); //初始化
+          },
+
+          methods: {
+            add: function () {
+              api.ajax({
+                url: cms_url + '/api.php/provide/vod/?ac=detail',
+                method: 'get',
+              }, function (ret, err) {
+                if (ret) {
+                  //console.log(JSON.stringify(ret))
+                  if (ret.code == 1) {
+                    channeldetails.it = channeldetails.it.concat(ret.list.slice(0, 6));
+
+                  }
+                }
+              });
+            },
+          }
+        });
+      }
+    }
+
+  </script>
+</body>
+
+</html>
