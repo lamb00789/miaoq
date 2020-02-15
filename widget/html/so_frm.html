@@ -1,114 +1,103 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport"
-		content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
-	<title>title</title>
-	<link rel="stylesheet" type="text/css" href="../css/api.css" />
-	<link rel="stylesheet" type="text/css" href="../css/swiper.css" />
-</head>
-
-<body>
-
-	<section class="aui-content aui-margin-5">
-		<div class="aui-row-padded" id="channeldetails">
-			<input type="hidden" value="10" id="nextrow" />
-			<ul id="videolist">
-
-			</ul>
-		</div>
-
-	</section>
-
-</body>
-<script type="text/x-dot-template" id="shipin">
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+      <link rel="stylesheet" type="text/css" href="../css/swiper.css"/>
+  </head>
+  <body>
+     
+     <section class="aui-content aui-margin-5" >
+         <div class="aui-row-padded" id="channeldetails">
+		 <input type="hidden" value="10" id="nextrow" />
+           <ul id="videolist">
+             
+           </ul>
+         </div>
+        
+     </section>
+    
+  </body>
+  <script type="text/x-dot-template" id="shipin">
 		{{~ it : value : index }}
-		
-				  <li onclick="openPlayer('{{= value.vod_play_url}}','{{=value.vod_name}}','{{=value.vod_play_from}}','{{=value.vod_score}}','{{=value.vod_content}}','{{=value.vod_id}}')" >
-					<img alt="{{= value. vod_name }}" src="{{= value. vod_pic }}">
-					<i>{{= value. vod_name }}</i>
+				  <li onclick="openPlayer('{{= value. url }}','{{= value. title }}')" >
+					<img alt="{{= value. title }}" src="{{= value. img }}">
+					
+					<i>{{= value. title }}</i>
               </li>
 		{{~}}
 	</script>
-<script type="text/javascript" src="../script/api.js"></script>
-<script type="text/javascript" src="../script/doT.js"></script>
-<script type="text/javascript" src="../script/common.js"></script>
-<script type="text/javascript">
-	var api_url = localStorage.getItem('api_url');
-	var cms_url = localStorage.getItem('cms_url');
-	apiready = function () {
-		rebo()
-
-	};
-	function rebo() {
-		var videolist = $api.byId('videolist');
-		var shipin = $api.byId('shipin');
-		api.ajax({
-			url: cms_url + '/api.php/provide/vod/?ac=detail',
-			method: 'get',
-			data: {
-				values: {
-					wd: api.pageParam.keyword,
-				}
-			}
-		}, function (ret, err) {
-			if (ret) {
-				//alert(JSON.stringify(ret))
-				if (ret.code == 1) {
-					if (ret.list.length == 0) {
-						api.toast({
-							msg: "没有找到视频~",
-							duration: 2000
-						});
+  <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.js" ></script>
+  <script type="text/javascript" src="../script/common.js"></script>
+  <script type="text/javascript">
+   var api_url = localStorage.getItem('api_url');
+      apiready = function(){
+          rebo()
+		  
+      };
+	  function rebo(){
+	   var videolist = $api.byId('videolist');
+	   var shipin = $api.byId('shipin');
+			api.ajax({
+				  url: api_url+'/App/Index/so.html',
+				  method: 'get',
+				   data: {
+					values: {
+							keyword: api.pageParam.keyword,
+							}
+					} 
+			  },function(ret, err){
+				  if (ret) {
+					//alert(JSON.stringify(ret))
+					if (ret.code == 1) {
+					var pagefn = doT.template(shipin.text);
+					videolist.innerHTML = pagefn(ret.msg);
+					}else if (ret.code == 0){
+					api.toast({
+						msg: ret.msg,
+						duration: 2000
+					});
 					}
+				  } else {
+					alert( '视频加载失败！' );
+					api.hideProgress();
+				}      
+			  });
+			}
+			
+			function rebos(){
+	  var videolist = $api.byId('videolist');
+	   var shipin = $api.byId('shipin');
+			api.ajax({
+				  url: api_url+'/App/Index/shipins.html',
+				  method: 'get',
+				  data: {
+					values: {  
+							type: api.pageParam.title,
+							nextrow: nextrow,
+							}
+					}  
+			  },function(ret, err){
+				  if (ret) {
+					//alert(JSON.stringify(ret)) 
+					if (ret.code == 1) {
 					var pagefn = doT.template(shipin.text);
-					videolist.innerHTML = pagefn(ret.list);
-				} else if (ret.code == 0) {
+					videolist.innerHTML = pagefn(ret.msg);
+					$("#nextrow").val(parseInt(nextrow)+10);
+					}else if (ret.code == 0){
 					api.toast({
 						msg: ret.msg,
 						duration: 2000
 					});
-				}
-			} else {
-				alert('视频加载失败！');
-				api.hideProgress();
-			}
-		});
+					}
+				  } else {
+					alert( '视频加载失败！' );
+					api.hideProgress();
+				}      
+			  });
 	}
-
-	function rebos() {
-		var videolist = $api.byId('videolist');
-		var shipin = $api.byId('shipin');
-		api.ajax({
-			url: cms_url + '/api.php/provide/vod/?ac=detail',
-			method: 'get',
-			data: {
-				values: {
-					wd: api.pageParam.keyword,
-					pg: nextrow,
-				}
-			}
-		}, function (ret, err) {
-			if (ret) {
-				//alert(JSON.stringify(ret)) 
-				if (ret.code == 1) {
-					var pagefn = doT.template(shipin.text);
-					videolist.innerHTML = pagefn(ret.list);
-					$("#nextrow").val(parseInt(nextrow) + 1);
-				} else if (ret.code == 0) {
-					api.toast({
-						msg: ret.msg,
-						duration: 2000
-					});
-				}
-			} else {
-				alert('视频加载失败！');
-				api.hideProgress();
-			}
-		});
-	}
-</script>
-
-</html>
+  </script>
+  </html>

@@ -42,17 +42,18 @@
   </body>
   <script type="text/x-dot-template" id="faxian1">
 		{{~ it : value : index }}
-				 <div  onclick="openPlayer('{{= value. vod_play_url }}','{{= value. vod_name }}','{{= value. vod_play_from }}','{{= value. vod_score }}','{{= delHtmlTag(value. vod_content) }}','{{= value. vod_id }}')"  >
+
+				 <div  onclick="openPlayer('{{= value. url }}','{{= value. title }}','{{= value. img }}')"  >
                         <div style="padding: 0 10px;border-radius:5px;background-color:#FFFFFF;">
-                            <div class="aui-card-list-content"  style="box-shadow: 0.15rem 0.15rem 0.15rem rgba(0, 0, 0, 0.1);height:10rem;background-size:cover;background-Image:url({{= value. vod_pic }})">
+                            <div class="aui-card-list-content"  style="box-shadow: 0.15rem 0.15rem 0.15rem rgba(0, 0, 0, 0.1);height:10rem;background-size:cover;background-Image:url({{= value. img }})">
                                 <div style="width:100%;height:100%;background-color:rgba(0,0,0,0.2);display: flex;justify-content: center;align-items: center">
 
                                     <img src="../image/paly.png" alt="" style="width:15%;height:auto;"/>
                                 </div>
                             </div>
                             <div class="aui-card-list-header">
-                                <div class="aui-ellipsis-2" style="color:#999999;" >{{= value. vod_name }}</div>
-                                <div class="aui-card-list-footer" style="color:#999999;font-weight:normal;">{{= value. vod_time }}</div>
+                                <div class="aui-ellipsis-2" style="color:#999999;" >{{= value. title }}</div>
+                                <div class="aui-card-list-footer" style="color:#999999;font-weight:normal;">{{= value. shijian }}</div>
                             </div>
                         </div>
                     </div>
@@ -63,10 +64,6 @@
 <script type="text/javascript" src="../script/common.js"></script>
   <script type="text/javascript">
    var api_url = localStorage.getItem('api_url');
-   var cms_url = localStorage.getItem('cms_url');
-   function delHtmlTag(str){
-	    return str.replace(/<[^>]+>/g,"");  //正则去掉所有的html标记
-  }
       apiready = function(){
 			api.parseTapmode();
 			get();
@@ -83,17 +80,15 @@
 	   function get(){
 	   var faxian = $api.byId('faxian');
 	   var faxian1 = $api.byId('faxian1');
-
 			api.ajax({
-				  url: cms_url+'/api.php/provide/vod/?ac=detail',
+				  url: api_url+'/App/Index/faxian.html',
 				  method: 'get',
 			  },function(ret, err){
 					limit=10;
 				  if (ret) {
 					//alert(JSON.stringify(ret))
-          console.log(JSON.stringify(ret))
 					var pagefn = doT.template(faxian1.text);
-					faxian.innerHTML = pagefn(ret['list']);
+					faxian.innerHTML = pagefn(ret);
 					api.addEventListener({
 						name:'scrolltobottom',
 						extra:{

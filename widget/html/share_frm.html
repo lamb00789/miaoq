@@ -13,18 +13,16 @@
       #swiper .swiper-slide{width:60%;position:relative;}
       #swiper .swiper-slide .qr{position:absolute;width:40%;left:30%;bottom:5%;}
       </style>
-      <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
   </head>
   <body style="background-color:#fff">
 
   <div >
     <img src="../image/share_bg.jpg" alt="" width="100%" id="box">
 	<p style="text-align:center;">
-	邀请码功能	<img style="width:200px;height:200px;margin:20px auto;" src="http://pan.5cmc.com/uploads/QQ截图20200210175349.png"/>
-	<!--下面有二维码api 自行修改吧懒得倒腾了-->
+		<img style="width:200px;height:200px;margin:20px auto;" src="http://pan.5cmc.com/uploads/QQ截图20200210175349.png"/>
 	</p>
 	<p style="text-align:center;color:#000;">
-    邀请码：<b style="color:#F01878;" id='share_code'></b>
+    邀请码：<b style="color:#F01878;">521</b>
 	</p>
 	<p style="text-align:center;color:#000;">
     长按识别图中二维码
@@ -66,9 +64,7 @@
 							 //hongbaoid.src = "http://qr.topscan.com/api.php?&text="+url;
 
 							//alert(url);
-						//hongbaoid.innerHTML = img;
-            $('#share_code').html(localStorage.getItem('user_id'));
-
+						hongbaoid.innerHTML = img;
 						}
 				  });
 	  };

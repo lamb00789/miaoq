@@ -1,22 +1,124 @@
 <!DOCTYPE html>
-<html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../css/api.css"/>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
-    <title>放映厅</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css" />
-    <link rel="stylesheet" type="text/css" href="../css/swiper.css" />
-</head>
+      <link rel="stylesheet" type="text/css" href="../css/base1.css"/>
 
-<body style="background-color: #Fdfdfd;margin:0 0;padding:0 0">
-</body>
-<script type="text/javascript" src="../script/api.js"></script>
-<script type="text/javascript" src="../script/doT.js"></script>
-<script type="text/javascript" src="../script/common.js"></script>
-<script type="text/javascript">
-    var api_url = localStorage.getItem('api_url');
-    var cms_url = localStorage.getItem('cms_url');
-</script>
-</body>
-</html>
+
+  </head>
+  <body style="background-color: #f1f1f1;height:auto;">
+
+      <div class="wrap" id="channellist">
+        <div class="game-page-zhubo" >
+          <section class="game-list-wrap-zhubo">
+              <ul class="clearfix" id="nextrow">
+
+              <li v-for="v in it">
+                <div class='game-a' style='border-radius: 5px 5px 5px 5px; box-shadow: 0.15rem 0.15rem 0.15rem rgba(0, 0, 0, 0.05);'  @click="openWin('list2_win', {title:v.title})" >
+              <img :src="v.picname" alt="" style="border-radius: 5px 5px 0px 0px;max-height: 70x; min-height: 70px;" @click="openWin('list2_win', {title:v.title})">
+                <div style="height:7px;"></div>
+              <em class="aaui-group-two"  @click="openWin('list2_win', {title:v.title})">{{v.title}}</em>
+              <div style="height:5px;"></div>
+              </li>
+              </ul>
+              </div></div>
+      </section>
+
+
+  </body>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/common.js"></script>
+  <script type="text/javascript" src="../script/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="../script/vue.js"></script>
+  <script type="text/javascript" src="../script/echo.js"></script>
+  <script type="text/javascript">
+   var api_url = localStorage.getItem('api_url'); //<em class="aaui-group-sc"  @click="openshou(v.title,v.picname)">收藏</em></div>
+      apiready = function(){
+         rebo();
+
+		}
+		function rebo(){
+	   var channellist = new Vue({
+              el: '#channellist',
+              data: {
+                  it: [],
+                  offset: 0,
+                  loader: '正在加载更多...'
+              },
+              mounted: function(){
+                  this.add(); //初始化
+                  loadMore(function(){channellist.add()}); //下拉加载
+              },
+              updated: function(){
+                  echo.init({offset: 500, throttle: 0}); //图片懒加载
+              },
+              methods: {
+                  add: function(){
+                   var nextrow=$("#nextrow").val();
+                       api.ajax({
+							  url: api_url+'/App/Index/yanyuan.html',
+							  method: 'get',
+							   data: {
+											values: {
+												nextrow: nextrow,
+												}
+										}
+								  },function(ret, err){
+									  if (ret) {
+										//console.log(JSON.stringify(ret))
+
+										if (ret.code == 1) {
+										channellist.offset += nextrow;
+										channellist.it = channellist.it.concat(ret.msg);
+										$("#nextrow").val(parseInt(nextrow)+10);
+
+									}else if (ret.code == 0){
+									api.toast({
+										msg: ret.msg,
+										duration: 2000
+									});
+									}
+
+							 }
+							});
+						  },
+					  }
+				  });
+			}
+
+
+
+	function openshou(title,img){
+			api.ajax({
+				  url: api_url+'/App/Index/shou.html',
+				  method: 'get',
+				  data:{
+					values:{
+						uid: localStorage.getItem('user_id'),
+						title: title,
+						type: '1',
+						img: img,
+					}
+				  }
+			  },function(ret,err){
+				  if (ret) {
+					 if(ret.code == 0 ){
+						api.toast({
+							msg: ret.msg,
+							duration: 1000
+						});
+					 }else if(ret.code == 1){
+						 api.toast({
+							msg: ret.msg,
+							duration: 1000
+						});
+					 }
+				}
+		  });
+	}
+  </script>
+  </html>
